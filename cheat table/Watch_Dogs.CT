@@ -1,0 +1,2100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="31">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>34</ID>
+      <Description>"(Activate) Player Hook [Experience, Skill Points, Money]"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <Color>008000</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{By NanoByte @ cheatengine.org}
+label(_plx32)
+registersymbol(_plx32)
+aobscan(pldd,F? ?? 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 06 00 00 00 80 01 00 00 00 00 00 00 00 00 00 00 FF FF FF FF 02 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 08 00 00 00)
+
+pldd:
+_plx32:
+ 
+[DISABLE]
+unregistersymbol(_plx32)
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>119</ID>
+          <Description>"Money"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>_plx32+98</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>36</ID>
+          <Description>"Experience Points"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>_plx32+A4</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>35</ID>
+          <Description>"Skill Points"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>_plx32+9C</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>144</ID>
+      <Description>"(Activate) Wanted Level Hook"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <Color>008000</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{By NanoByte @ cheatengine.org}
+[ENABLE]
+alloc(_wd64WantedLevel,256,"Disrupt_b64.dll")
+globalalloc(_pnlv,8)
+label(_wd64WantedLevel_originalcode)
+label(_wd64WantedLevel_exit)
+label(_pnl)
+registersymbol(_pnl)
+aobscanmodule(pnl,Disrupt_b64.dll,66 89 41 04 44 89 11)
+
+_wd64WantedLevel:
+cmp r10d,[_pnlv]
+je _wd64WantedLevel_originalcode
+mov r10d,[_pnlv]
+_wd64WantedLevel_originalcode:
+mov [rcx],r10d
+mov [_pnlv],r10d
+mov ecx,00000003
+jmp _wd64WantedLevel_exit
+
+pnl+4:
+_pnl:
+jmp _wd64WantedLevel
+db 90 90 90
+_wd64WantedLevel_exit:
+
+[DISABLE]
+dealloc(_wd64WantedLevel)
+_pnl:
+mov [rcx],r10d
+mov ecx,00000003
+unregistersymbol(_pnl)
+unregistersymbol(_pnlv)
+//Alt: db 44 89 11 B9 03 00 00 00
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>145</ID>
+          <Description>"Freeze value at: (range 0-100)"</Description>
+          <Color>FF00FF</Color>
+          <VariableType>4 Bytes</VariableType>
+          <Address>_pnlv</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>117</ID>
+      <Description>"Reputation Scripts"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <Color>008000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>64</ID>
+          <Description>"(Activate) Reputation Hook - AoBScan"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <Color>000000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+{By Daijobu @ cheatengine.org
+For releases:
+Watch_Dogs Deluxe SC - Steam006
+Watch_Dogs - RELOADED (Hotfix)
+Note: This script is hooked at the same location as NanoByte discovered.
+Note: Discovered this as I was about to upload my script. Hence why they're similar.}
+//Allocations
+alloc(wd64_reputation,512,"Disrupt_b64.dll")
+//Labels
+label(wd64_reputation_load)
+label(wd64_reputation_set)
+label(wd64_reputation_fixpos)
+label(wd64_reputation_fixneg)
+label(wd64_reputation_skip)
+label(wd64_reputation_exit)
+label(wd64_reputation_aob_jmp)
+label(_wd64_ptr_rep_set)
+label(_wd64_ptr_rep_load)
+label(_wd64_ptr_rep_prev)
+//Symbols
+registersymbol(wd64_reputation_aob_jmp)
+registersymbol(_wd64_ptr_rep_set)
+registersymbol(_wd64_ptr_rep_load)
+//Array of Byte scans
+aobscanmodule(wd64_reputation_aob,Disrupt_b64.dll,74 F3 8B 42 10) //"Disrupt_b64.dll"+62E089
+
+wd64_reputation+256:
+_wd64_ptr_rep_set:
+dd 0
+
+wd64_reputation+266:
+_wd64_ptr_rep_load:
+dd 0
+
+wd64_reputation+276:
+_wd64_ptr_rep_prev:
+dd 0
+
+//Main
+wd64_reputation:
+cmp [_wd64_ptr_rep_set],00000258
+jg wd64_reputation_fixpos
+cmp [_wd64_ptr_rep_set],FFFFFDA8
+jl wd64_reputation_fixneg
+push esi
+wd64_reputation_load:
+mov esi,[rdx+10]
+mov [_wd64_ptr_rep_load],esi
+cmp [_wd64_ptr_rep_prev],esi
+je wd64_reputation_set
+mov esi,[_wd64_ptr_rep_prev]
+cmp [_wd64_ptr_rep_set],esi
+je wd64_reputation_skip
+wd64_reputation_set:
+mov esi,[_wd64_ptr_rep_set]
+mov [_wd64_ptr_rep_prev],esi
+mov [rdx+10],esi
+jmp wd64_reputation_skip
+
+//Skip
+wd64_reputation_skip:
+pop esi
+mov eax,[rdx+10]
+add rsp,20
+jmp wd64_reputation_exit
+
+//Don't let people screw up their game with too large or small values.
+wd64_reputation_fixpos:
+mov [_wd64_ptr_rep_set],00000258
+jmp wd64_reputation
+wd64_reputation_fixneg:
+mov [_wd64_ptr_rep_set],FFFFFDA8
+jmp wd64_reputation
+
+//Redirect and Exit
+wd64_reputation_aob+2: //"Disrupt_b64.dll"+62E08B:
+wd64_reputation_aob_jmp:
+jmp wd64_reputation
+db 90 90
+wd64_reputation_exit:
+
+[DISABLE]
+dealloc(wd64_reputation)
+wd64_reputation_aob_jmp: //"Disrupt_b64.dll"+62E08B:
+db 8B 42 10 48 83 C4 20
+unregistersymbol(wd64_reputation_aob_jmp)
+unregistersymbol(_wd64_ptr_rep_set)
+unregistersymbol(_wd64_ptr_rep_load)
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>65</ID>
+              <Description>"Reputation range: -600 to +600"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <Color>FF00FF</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>_wd64_ptr_rep_set</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>66</ID>
+              <Description>"Reputation Display (Current)"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <VariableType>4 Bytes</VariableType>
+              <Address>_wd64_ptr_rep_load</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>51</ID>
+      <Description>"Make Any Purchase Get $1,000,000"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : Watch_Dogs.exe
+  Version: 
+  Date   : 2020-08-28
+  Author : joeyc
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Disrupt_b64.dll,41 29 B4 BC 9C 00 00 00) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+837C5D)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  add [r12+rdi*4+0000009C],#1000000
+  jmp return
+
+INJECT:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db 41 29 B4 BC 9C 00 00 00
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+837C5D
+
+"Disrupt_b64.dll"+837C31: 48 8B 44 24 30           -  mov rax,[rsp+30]
+"Disrupt_b64.dll"+837C36: 48 8B 9C 24 A0 00 00 00  -  mov rbx,[rsp+000000A0]
+"Disrupt_b64.dll"+837C3E: 48 85 C0                 -  test rax,rax
+"Disrupt_b64.dll"+837C41: 74 12                    -  je Disrupt_b64.dll+837C55
+"Disrupt_b64.dll"+837C43: F0 0F C1 28              - lock  xadd [rax],ebp
+"Disrupt_b64.dll"+837C47: FF CD                    -  dec ebp
+"Disrupt_b64.dll"+837C49: 75 0A                    -  jne Disrupt_b64.dll+837C55
+"Disrupt_b64.dll"+837C4B: 48 8B 4C 24 30           -  mov rcx,[rsp+30]
+"Disrupt_b64.dll"+837C50: E8 2B 77 91 FF           -  call Disrupt_b64.dll+14F380
+"Disrupt_b64.dll"+837C55: 48 8B AC 24 B0 00 00 00  -  mov rbp,[rsp+000000B0]
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+837C5D: 41 29 B4 BC 9C 00 00 00  -  sub [r12+rdi*4+0000009C],esi
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+837C65: 48 8D 15 D4 22 86 02     -  lea rdx,[Disrupt_b64.dll+3099F40]
+"Disrupt_b64.dll"+837C6C: 48 8D 4C 24 50           -  lea rcx,[rsp+50]
+"Disrupt_b64.dll"+837C71: E8 8A EE 8F FF           -  call Disrupt_b64.dll+136B00
+"Disrupt_b64.dll"+837C76: F7 DE                    -  neg esi
+"Disrupt_b64.dll"+837C78: 8B D7                    -  mov edx,edi
+"Disrupt_b64.dll"+837C7A: 49 8B CC                 -  mov rcx,r12
+"Disrupt_b64.dll"+837C7D: 4C 8B C8                 -  mov r9,rax
+"Disrupt_b64.dll"+837C80: 44 8B C6                 -  mov r8d,esi
+"Disrupt_b64.dll"+837C83: C6 44 24 28 01           -  mov byte ptr [rsp+28],01
+"Disrupt_b64.dll"+837C88: C6 44 24 20 01           -  mov byte ptr [rsp+20],01
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>443</ID>
+      <Description>"Infinite Skill Points (Works On Digital Trips)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(INFSKILL,Disrupt_b64.dll,41 29 B4 BC 9C 00 00 00) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+837C5D)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [r12+rdi*4+0000009C],#999
+  sub [r12+rdi*4+0000009C],esi
+  jmp return
+
+INFSKILL:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INFSKILL)
+
+[DISABLE]
+
+INFSKILL:
+  db 41 29 B4 BC 9C 00 00 00
+
+unregistersymbol(INFSKILL)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+837C5D
+
+"Disrupt_b64.dll"+837C31: 48 8B 44 24 30           -  mov rax,[rsp+30]
+"Disrupt_b64.dll"+837C36: 48 8B 9C 24 A0 00 00 00  -  mov rbx,[rsp+000000A0]
+"Disrupt_b64.dll"+837C3E: 48 85 C0                 -  test rax,rax
+"Disrupt_b64.dll"+837C41: 74 12                    -  je Disrupt_b64.dll+837C55
+"Disrupt_b64.dll"+837C43: F0 0F C1 28              - lock  xadd [rax],ebp
+"Disrupt_b64.dll"+837C47: FF CD                    -  dec ebp
+"Disrupt_b64.dll"+837C49: 75 0A                    -  jne Disrupt_b64.dll+837C55
+"Disrupt_b64.dll"+837C4B: 48 8B 4C 24 30           -  mov rcx,[rsp+30]
+"Disrupt_b64.dll"+837C50: E8 2B 77 91 FF           -  call Disrupt_b64.dll+14F380
+"Disrupt_b64.dll"+837C55: 48 8B AC 24 B0 00 00 00  -  mov rbp,[rsp+000000B0]
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+837C5D: 41 29 B4 BC 9C 00 00 00  -  sub [r12+rdi*4+0000009C],esi
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+837C65: 48 8D 15 D4 22 86 02     -  lea rdx,[Disrupt_b64.dll+3099F40]
+"Disrupt_b64.dll"+837C6C: 48 8D 4C 24 50           -  lea rcx,[rsp+50]
+"Disrupt_b64.dll"+837C71: E8 8A EE 8F FF           -  call Disrupt_b64.dll+136B00
+"Disrupt_b64.dll"+837C76: F7 DE                    -  neg esi
+"Disrupt_b64.dll"+837C78: 8B D7                    -  mov edx,edi
+"Disrupt_b64.dll"+837C7A: 49 8B CC                 -  mov rcx,r12
+"Disrupt_b64.dll"+837C7D: 4C 8B C8                 -  mov r9,rax
+"Disrupt_b64.dll"+837C80: 44 8B C6                 -  mov r8d,esi
+"Disrupt_b64.dll"+837C83: C6 44 24 28 01           -  mov byte ptr [rsp+28],01
+"Disrupt_b64.dll"+837C88: C6 44 24 20 01           -  mov byte ptr [rsp+20],01
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>100</ID>
+      <Description>"Infinite Health No Fall Damage (Works On Digital Trips)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(InfHealth,Disrupt_b64.dll,F3 0F 11 49 18 0F 84)
+alloc(newmem,$1000,"Disrupt_b64.dll"+19BBFE0)
+
+label(code)
+label(return)
+
+newmem:
+cmp [rcx+1C],(float)100
+jne code
+movss xmm1,[rcx+1C] //move max health in
+movss [rcx+18],xmm1 //write max health to player
+jmp return
+
+code:
+movss [rcx+18],xmm1
+jmp return
+
+InfHealth:
+jmp newmem
+return:
+registersymbol(InfHealth)
+
+[DISABLE]
+
+InfHealth:
+db F3 0F 11 49 18
+
+unregistersymbol(InfHealth)
+dealloc(newmem)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>93</ID>
+      <Description>"Infinite Ammo No Reload (Works On Digital Trips)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(AMMO,Disrupt_b64.dll,FF 8F 98 00 00 00) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+413A1A)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rdi+00000098],#99
+  jmp return
+
+AMMO:
+  jmp newmem
+  nop
+return:
+registersymbol(AMMO)
+
+[DISABLE]
+
+AMMO:
+  db FF 8F 98 00 00 00
+
+unregistersymbol(AMMO)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+413A1A
+
+"Disrupt_b64.dll"+4139EA: F3 0F 11 44 24 20           -  movss [rsp+20],xmm0
+"Disrupt_b64.dll"+4139F0: 48 8B CF                    -  mov rcx,rdi
+"Disrupt_b64.dll"+4139F3: E8 E8 37 F6 FF              -  call Disrupt_b64.dll+3771E0
+"Disrupt_b64.dll"+4139F8: 48 8D 4C 24 50              -  lea rcx,[rsp+50]
+"Disrupt_b64.dll"+4139FD: E8 FE 41 F6 FF              -  call Disrupt_b64.dll+377C00
+"Disrupt_b64.dll"+413A02: 80 BF 9C 00 00 00 00        -  cmp byte ptr [rdi+0000009C],00
+"Disrupt_b64.dll"+413A09: 75 21                       -  jne Disrupt_b64.dll+413A2C
+"Disrupt_b64.dll"+413A0B: 80 BF 9D 00 00 00 00        -  cmp byte ptr [rdi+0000009D],00
+"Disrupt_b64.dll"+413A12: 74 18                       -  je Disrupt_b64.dll+413A2C
+"Disrupt_b64.dll"+413A14: 8B 87 90 00 00 00           -  mov eax,[rdi+00000090]
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+413A1A: FF 8F 98 00 00 00           -  dec [rdi+00000098]
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+413A20: 85 C0                       -  test eax,eax
+"Disrupt_b64.dll"+413A22: 7E 08                       -  jle Disrupt_b64.dll+413A2C
+"Disrupt_b64.dll"+413A24: FF C8                       -  dec eax
+"Disrupt_b64.dll"+413A26: 89 87 90 00 00 00           -  mov [rdi+00000090],eax
+"Disrupt_b64.dll"+413A2C: 48 8B 1E                    -  mov rbx,[rsi]
+"Disrupt_b64.dll"+413A2F: 4C 8B A4 24 08 01 00 00     -  mov r12,[rsp+00000108]
+"Disrupt_b64.dll"+413A37: 48 8B BC 24 38 01 00 00     -  mov rdi,[rsp+00000138]
+"Disrupt_b64.dll"+413A3F: FF 4B 18                    -  dec [rbx+18]
+"Disrupt_b64.dll"+413A42: 48 8B B4 24 30 01 00 00     -  mov rsi,[rsp+00000130]
+"Disrupt_b64.dll"+413A4A: 48 8B AC 24 28 01 00 00     -  mov rbp,[rsp+00000128]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>16</ID>
+      <Description>"Infinite Ammo And Craftables (Works On Digital Trips)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(FBOOST,Disrupt_b64.dll,89 42 0C B0 01 48 8B) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+2C66FD)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rdx+0C],#999
+  mov al,01
+  jmp return
+
+FBOOST:
+  jmp newmem
+return:
+registersymbol(FBOOST)
+
+[DISABLE]
+
+FBOOST:
+  db 89 42 0C B0 01
+
+unregistersymbol(FBOOST)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+2C66FD
+
+"Disrupt_b64.dll"+2C66E4: 48 8B 74 24 48     -  mov rsi,[rsp+48]
+"Disrupt_b64.dll"+2C66E9: 48 83 C4 20        -  add rsp,20
+"Disrupt_b64.dll"+2C66ED: 5F                 -  pop rdi
+"Disrupt_b64.dll"+2C66EE: C3                 -  ret 
+"Disrupt_b64.dll"+2C66EF: 8B 42 0C           -  mov eax,[rdx+0C]
+"Disrupt_b64.dll"+2C66F2: 83 F8 FF           -  cmp eax,-01
+"Disrupt_b64.dll"+2C66F5: 74 E6              -  je Disrupt_b64.dll+2C66DD
+"Disrupt_b64.dll"+2C66F7: 3B C7              -  cmp eax,edi
+"Disrupt_b64.dll"+2C66F9: 76 17              -  jna Disrupt_b64.dll+2C6712
+"Disrupt_b64.dll"+2C66FB: 2B C7              -  sub eax,edi
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+2C66FD: 89 42 0C           -  mov [rdx+0C],eax
+"Disrupt_b64.dll"+2C6700: B0 01              -  mov al,01
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+2C6702: 48 8B 5C 24 40     -  mov rbx,[rsp+40]
+"Disrupt_b64.dll"+2C6707: 48 8B 74 24 48     -  mov rsi,[rsp+48]
+"Disrupt_b64.dll"+2C670C: 48 83 C4 20        -  add rsp,20
+"Disrupt_b64.dll"+2C6710: 5F                 -  pop rdi
+"Disrupt_b64.dll"+2C6711: C3                 -  ret 
+"Disrupt_b64.dll"+2C6712: 48 8B 5C 24 40     -  mov rbx,[rsp+40]
+"Disrupt_b64.dll"+2C6717: 48 8B 74 24 48     -  mov rsi,[rsp+48]
+"Disrupt_b64.dll"+2C671C: 33 C0              -  xor eax,eax
+"Disrupt_b64.dll"+2C671E: 89 42 0C           -  mov [rdx+0C],eax
+"Disrupt_b64.dll"+2C6721: B0 01              -  mov al,01
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>106</ID>
+      <Description>"Infinite Focus"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(INFFOCUS,Disrupt_b64.dll,C1 F3 0F 11 83 88 01 00 00 0F) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+252096)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rbx+00000188],(float)1.75
+  jmp return
+
+INFFOCUS+01:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INFFOCUS)
+
+[DISABLE]
+
+INFFOCUS+01:
+  db F3 0F 11 83 88 01 00 00
+
+unregistersymbol(INFFOCUS)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+252096
+
+"Disrupt_b64.dll"+252072: F3 0F 59 C6                 -  mulss xmm0,xmm6
+"Disrupt_b64.dll"+252076: F3 0F 5C C8                 -  subss xmm1,xmm0
+"Disrupt_b64.dll"+25207A: 0F 57 C0                    -  xorps xmm0,xmm0
+"Disrupt_b64.dll"+25207D: 0F 2F C8                    -  comiss xmm1,xmm0
+"Disrupt_b64.dll"+252080: 77 03                       -  ja Disrupt_b64.dll+252085
+"Disrupt_b64.dll"+252082: 0F 28 C8                    -  movaps xmm1,xmm0
+"Disrupt_b64.dll"+252085: F3 0F 10 43 68              -  movss xmm0,[rbx+68]
+"Disrupt_b64.dll"+25208A: 0F 2F C1                    -  comiss xmm0,xmm1
+"Disrupt_b64.dll"+25208D: 0F 82 1B 02 00 00           -  jb Disrupt_b64.dll+2522AE
+"Disrupt_b64.dll"+252093: 0F 28 C1                    -  movaps xmm0,xmm1
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+252096: F3 0F 11 83 88 01 00 00     -  movss [rbx+00000188],xmm0
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+25209E: 0F 28 74 24 60              -  movaps xmm6,[rsp+60]
+"Disrupt_b64.dll"+2520A3: 48 83 C4 70                 -  add rsp,70
+"Disrupt_b64.dll"+2520A7: 5B                          -  pop rbx
+"Disrupt_b64.dll"+2520A8: C3                          -  ret 
+"Disrupt_b64.dll"+2520A9: F3 0F 10 2D 2B 00 BF 02     -  movss xmm5,[Disrupt_b64.dll+2E420DC]
+"Disrupt_b64.dll"+2520B1: 48 89 AC 24 80 00 00 00     -  mov [rsp+00000080],rbp
+"Disrupt_b64.dll"+2520B9: 48 89 B4 24 90 00 00 00     -  mov [rsp+00000090],rsi
+"Disrupt_b64.dll"+2520C1: 48 89 BC 24 98 00 00 00     -  mov [rsp+00000098],rdi
+"Disrupt_b64.dll"+2520C9: 48 8D 81 24 02 00 00        -  lea rax,[rcx+00000224]
+"Disrupt_b64.dll"+2520D0: B9 0A 00 00 00              -  mov ecx,0000000A
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>102</ID>
+      <Description>"Infinite Battery"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(INFBATT,Disrupt_b64.dll,F3 0F 11 89 EC 00 00 00 E8) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+BA4DE2)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rcx+000000EC],(float)464
+  jmp return
+
+INFBATT:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INFBATT)
+
+[DISABLE]
+
+INFBATT:
+  db F3 0F 11 89 EC 00 00 00
+
+unregistersymbol(INFBATT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+BA4DE2
+
+"Disrupt_b64.dll"+BA4DAE: F3 0F 5E C8              -  divss xmm1,xmm0
+"Disrupt_b64.dll"+BA4DB2: F3 0F 10 81 0C 01 00 00  -  movss xmm0,[rcx+0000010C]
+"Disrupt_b64.dll"+BA4DBA: F3 0F 59 CA              -  mulss xmm1,xmm2
+"Disrupt_b64.dll"+BA4DBE: F3 0F 59 05 A2 3D 34 02  -  mulss xmm0,[Disrupt_b64.dll+2EE8B68]
+"Disrupt_b64.dll"+BA4DC6: F3 0F 5E C8              -  divss xmm1,xmm0
+"Disrupt_b64.dll"+BA4DCA: F3 0F 10 81 E8 00 00 00  -  movss xmm0,[rcx+000000E8]
+"Disrupt_b64.dll"+BA4DD2: F3 0F 58 89 EC 00 00 00  -  addss xmm1,[rcx+000000EC]
+"Disrupt_b64.dll"+BA4DDA: 0F 2F C8                 -  comiss xmm1,xmm0
+"Disrupt_b64.dll"+BA4DDD: 72 03                    -  jb Disrupt_b64.dll+BA4DE2
+"Disrupt_b64.dll"+BA4DDF: 0F 28 C8                 -  movaps xmm1,xmm0
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+BA4DE2: F3 0F 11 89 EC 00 00 00  -  movss [rcx+000000EC],xmm1
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+BA4DEA: E8 41 FC FF FF           -  call Disrupt_b64.dll+BA4A30
+"Disrupt_b64.dll"+BA4DEF: 48 83 C4 20              -  add rsp,20
+"Disrupt_b64.dll"+BA4DF3: 5B                       -  pop rbx
+"Disrupt_b64.dll"+BA4DF4: C3                       -  ret 
+"Disrupt_b64.dll"+BA4DF5: CC                       -  int 3 
+"Disrupt_b64.dll"+BA4DF6: CC                       -  int 3 
+"Disrupt_b64.dll"+BA4DF7: CC                       -  int 3 
+"Disrupt_b64.dll"+BA4DF8: CC                       -  int 3 
+"Disrupt_b64.dll"+BA4DF9: CC                       -  int 3 
+"Disrupt_b64.dll"+BA4DFA: CC                       -  int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>104</ID>
+      <Description>"Infinite Hacking Time"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(INFHACKTIME,Disrupt_b64.dll,F3 0F 11 81 B4 00 00 00 48) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+88946B)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rcx+000000B4],(float)99
+  jmp return
+
+INFHACKTIME:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INFHACKTIME)
+
+[DISABLE]
+
+INFHACKTIME:
+  db F3 0F 11 81 B4 00 00 00
+
+unregistersymbol(INFHACKTIME)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+88946B
+
+"Disrupt_b64.dll"+889441: 48 8B D9                 -  mov rbx,rcx
+"Disrupt_b64.dll"+889444: C6 81 C0 00 00 00 00     -  mov byte ptr [rcx+000000C0],00
+"Disrupt_b64.dll"+88944B: 74 67                    -  je Disrupt_b64.dll+8894B4
+"Disrupt_b64.dll"+88944D: 48 8B 05 8C 8E 2E 03     -  mov rax,[Disrupt_b64.dll+3B722E0]
+"Disrupt_b64.dll"+889454: 80 38 00                 -  cmp byte ptr [rax],00
+"Disrupt_b64.dll"+889457: 75 21                    -  jne Disrupt_b64.dll+88947A
+"Disrupt_b64.dll"+889459: 80 78 1C 00              -  cmp byte ptr [rax+1C],00
+"Disrupt_b64.dll"+88945D: 74 21                    -  je Disrupt_b64.dll+889480
+"Disrupt_b64.dll"+88945F: F3 0F 10 81 B4 00 00 00  -  movss xmm0,[rcx+000000B4]
+"Disrupt_b64.dll"+889467: F3 0F 5C C1              -  subss xmm0,xmm1
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+88946B: F3 0F 11 81 B4 00 00 00  -  movss [rcx+000000B4],xmm0
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+889473: 48 8B 05 66 8E 2E 03     -  mov rax,[Disrupt_b64.dll+3B722E0]
+"Disrupt_b64.dll"+88947A: 80 78 1C 00              -  cmp byte ptr [rax+1C],00
+"Disrupt_b64.dll"+88947E: 75 16                    -  jne Disrupt_b64.dll+889496
+"Disrupt_b64.dll"+889480: 83 79 34 FF              -  cmp dword ptr [rcx+34],-01
+"Disrupt_b64.dll"+889484: 74 10                    -  je Disrupt_b64.dll+889496
+"Disrupt_b64.dll"+889486: 48 83 C1 34              -  add rcx,34
+"Disrupt_b64.dll"+88948A: E8 61 BB 9C FF           -  call Disrupt_b64.dll+254FF0
+"Disrupt_b64.dll"+88948F: C7 43 34 FF FF FF FF     -  mov [rbx+34],FFFFFFFF
+"Disrupt_b64.dll"+889496: 0F 57 C0                 -  xorps xmm0,xmm0
+"Disrupt_b64.dll"+889499: 0F 2F 83 B4 00 00 00     -  comiss xmm0,[rbx+000000B4]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>109</ID>
+      <Description>"1 Coin To Win Cash Run"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(CASHRUN,Disrupt_b64.dll,FF 83 90 00 00 00 32) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+14AA1E5)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rbx+00000090],(float)39
+  inc [rbx+00000090]
+  jmp return
+
+CASHRUN:
+  jmp newmem
+  nop
+return:
+registersymbol(CASHRUN)
+
+[DISABLE]
+
+CASHRUN:
+  db FF 83 90 00 00 00
+
+unregistersymbol(CASHRUN)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+14AA1E5
+
+"Disrupt_b64.dll"+14AA1B2: 48 8B 0C C1                    -  mov rcx,[rcx+rax*8]
+"Disrupt_b64.dll"+14AA1B6: B0 01                          -  mov al,01
+"Disrupt_b64.dll"+14AA1B8: F3 0F 10 81 F8 03 00 00        -  movss xmm0,[rcx+000003F8]
+"Disrupt_b64.dll"+14AA1C0: C7 83 B0 00 00 00 00 00 80 BF  -  mov [rbx+000000B0],BF800000
+"Disrupt_b64.dll"+14AA1CA: F3 0F 58 83 9C 00 00 00        -  addss xmm0,[rbx+0000009C]
+"Disrupt_b64.dll"+14AA1D2: F3 0F 11 83 9C 00 00 00        -  movss [rbx+0000009C],xmm0
+"Disrupt_b64.dll"+14AA1DA: 48 8B 5C 24 40                 -  mov rbx,[rsp+40]
+"Disrupt_b64.dll"+14AA1DF: 48 83 C4 30                    -  add rsp,30
+"Disrupt_b64.dll"+14AA1E3: 5F                             -  pop rdi
+"Disrupt_b64.dll"+14AA1E4: C3                             -  ret 
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+14AA1E5: FF 83 90 00 00 00              -  inc [rbx+00000090]
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+14AA1EB: 32 C0                          -  xor al,al
+"Disrupt_b64.dll"+14AA1ED: 48 8B 5C 24 40                 -  mov rbx,[rsp+40]
+"Disrupt_b64.dll"+14AA1F2: 48 83 C4 30                    -  add rsp,30
+"Disrupt_b64.dll"+14AA1F6: 5F                             -  pop rdi
+"Disrupt_b64.dll"+14AA1F7: C3                             -  ret 
+"Disrupt_b64.dll"+14AA1F8: CC                             -  int 3 
+"Disrupt_b64.dll"+14AA1F9: CC                             -  int 3 
+"Disrupt_b64.dll"+14AA1FA: CC                             -  int 3 
+"Disrupt_b64.dll"+14AA1FB: CC                             -  int 3 
+"Disrupt_b64.dll"+14AA1FC: CC                             -  int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>445</ID>
+      <Description>"Spider Tank Freeze Time"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(SPTANKTIME,Disrupt_b64.dll,F3 0F 11 47 08 8B 43) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+837108)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rdi+08],(float)540
+  jmp return
+
+SPTANKTIME:
+  jmp newmem
+return:
+registersymbol(SPTANKTIME)
+
+[DISABLE]
+
+SPTANKTIME:
+  db F3 0F 11 47 08
+
+unregistersymbol(SPTANKTIME)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+837108
+
+"Disrupt_b64.dll"+8370E8: 48 FF CE              -  dec rsi
+"Disrupt_b64.dll"+8370EB: 75 E6                 -  jne Disrupt_b64.dll+8370D3
+"Disrupt_b64.dll"+8370ED: 48 63 47 60           -  movsxd  rax,dword ptr [rdi+60]
+"Disrupt_b64.dll"+8370F1: 83 F8 08              -  cmp eax,08
+"Disrupt_b64.dll"+8370F4: 7D 1D                 -  jnl Disrupt_b64.dll+837113
+"Disrupt_b64.dll"+8370F6: 48 8B 5C C7 70        -  mov rbx,[rdi+rax*8+70]
+"Disrupt_b64.dll"+8370FB: 48 85 DB              -  test rbx,rbx
+"Disrupt_b64.dll"+8370FE: 74 13                 -  je Disrupt_b64.dll+837113
+"Disrupt_b64.dll"+837100: 48 8B CB              -  mov rcx,rbx
+"Disrupt_b64.dll"+837103: E8 88 86 07 00        -  call Disrupt_b64.dll+8AF790
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+837108: F3 0F 11 47 08        -  movss [rdi+08],xmm0
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+83710D: 8B 43 24              -  mov eax,[rbx+24]
+"Disrupt_b64.dll"+837110: 89 47 14              -  mov [rdi+14],eax
+"Disrupt_b64.dll"+837113: 83 7F 60 08           -  cmp dword ptr [rdi+60],08
+"Disrupt_b64.dll"+837117: 0F 8C 8B 00 00 00     -  jl Disrupt_b64.dll+8371A8
+"Disrupt_b64.dll"+83711D: F3 0F 10 47 58        -  movss xmm0,[rdi+58]
+"Disrupt_b64.dll"+837122: 0F 2E 05 7B B1 60 02  -  ucomiss xmm0,[Disrupt_b64.dll+2E422A4]
+"Disrupt_b64.dll"+837129: 74 7D                 -  je Disrupt_b64.dll+8371A8
+"Disrupt_b64.dll"+83712B: 0F 2E 05 6E B1 60 02  -  ucomiss xmm0,[Disrupt_b64.dll+2E422A0]
+"Disrupt_b64.dll"+837132: 74 1A                 -  je Disrupt_b64.dll+83714E
+"Disrupt_b64.dll"+837134: 48 8B 47 50           -  mov rax,[rdi+50]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>72228</ID>
+      <Description>"No-clip"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscanmodule(charCoordWriteAOB,Disrupt_b64.dll,0F 29 80 20 01 00 00 48 8B 8D 30 01 00 00)
+registersymbol(charCoordWriteAOB)
+aobscanmodule(normVectorReadAOB,Disrupt_b64.dll,F3 44 0F 10 40 4C F3 0F 10 78 50)
+registersymbol(normVectorReadAOB)
+aobscanmodule(axisXReadAOB,Disrupt_b64.dll,F3 0F 10 5B 14 44 0F 29 44 24 20)
+registersymbol(axisXReadAOB)
+
+///
+
+alloc(fFlyModeCoord,16,"Disrupt_b64.dll")
+registersymbol(fFlyModeCoord)
+
+label(bFlyMode)
+registersymbol(bFlyMode)
+label(bFirstActivate)
+registersymbol(bFirstActivate)
+label(pPlayerCoord)
+registersymbol(pPlayerCoord)
+
+label(pNormVector)
+registersymbol(pNormVector)
+
+label(pMovementInfo)
+registersymbol(pMovementInfo)
+
+///
+
+alloc(newmem,2048,"Disrupt_b64.dll") //+CB2527)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+mov rcx,[rax+20]
+test rcx,rcx
+jz originalcode
+mov ecx,[rcx+20]
+test ecx,ecx
+jnz originalcode
+mov [pPlayerCoord],rax
+
+cmp byte ptr [bFlyMode],1
+je @f
+mov byte ptr [bFirstActivate],1
+jmp originalcode
+
+@@:
+cmp byte ptr [bFirstActivate],1
+jne @f
+mov byte ptr [bFirstActivate],0
+movaps [fFlyModeCoord],xmm0
+
+@@:
+xorps xmm14,xmm14
+xorps xmm15,xmm15
+
+///do x axis
+mov rcx,[pMovementInfo]
+test rcx,rcx
+jz @f
+movss xmm15,[rcx+14]
+shufps xmm15,xmm15,c0 //set stick x axis to all but most significant element
+
+mov ecx,(float)0.5
+movd xmm14,ecx
+shufps xmm14,xmm14,00
+mulps xmm15,xmm14     //apply "speed"
+
+mov rcx,[pNormVector]
+test rcx,rcx
+jz @f
+movups xmm14,[rcx+4c]
+mulps xmm15,xmm14     //apply vector
+
+addps xmm15,[fFlyModeCoord]
+movaps [fFlyModeCoord],xmm15
+
+///do y axis
+mov rcx,[pMovementInfo]
+test rcx,rcx
+jz @f
+movss xmm15,[rcx+10]
+shufps xmm15,xmm15,c4 //copy stick y axis to 3rd element
+mov ecx,(float)-1
+movd xmm14,ecx
+mulss xmm15,xmm14     //neg least significant element
+shufps xmm15,xmm15,d8 //swap 2nd and 3rd element
+shufps xmm15,xmm15,e1 //swap least and 2rd element
+
+mov ecx,(float)0.5
+movd xmm14,ecx
+shufps xmm14,xmm14,00
+mulps xmm15,xmm14     //apply "speed"
+
+mov rcx,[pNormVector]
+test rcx,rcx
+jz @f
+movups xmm14,[rcx+4c]
+shufps xmm14,xmm14,e1 //swap least and 2rd element, as we're doing y axis
+mulps xmm15,xmm14     //apply vector
+
+addps xmm15,[fFlyModeCoord]
+movaps [fFlyModeCoord],xmm15
+
+//update player coord with flying coord
+@@:
+xorps xmm14,xmm14
+xorps xmm15,xmm15
+movaps xmm0,[fFlyModeCoord]
+
+originalcode:
+movaps [rax+00000120],xmm0
+
+exit:
+jmp returnhere
+
+///
+bFlyMode:
+db 0
+bFirstActivate:
+db 1
+pPlayerCoord:
+dq 0
+///
+
+charCoordWriteAOB: //"Disrupt_b64.dll"+CB2527:
+jmp newmem
+nop
+nop
+returnhere:
+
+///
+
+alloc(newmem2,2048,"Disrupt_b64.dll") //+17BCD77)
+label(returnhere2)
+label(originalcode2)
+label(exit2)
+
+newmem2: //this is allocated memory, you have read,write,execute access
+//place your code here
+mov [pNormVector],rax
+
+originalcode2:
+movss xmm8,[rax+4C]
+
+exit2:
+jmp returnhere2
+
+///
+pNormVector:
+dq 0
+///
+
+normVectorReadAOB: //"Disrupt_b64.dll"+17BCD77:
+jmp newmem2
+nop
+returnhere2:
+
+///
+
+alloc(newmem3,2048,"Disrupt_b64.dll") //+1DE9D17)
+label(returnhere3)
+label(originalcode3)
+label(exit3)
+
+newmem3: //this is allocated memory, you have read,write,execute access
+//place your code here
+mov [pMovementInfo],rbx
+
+originalcode3:
+movss xmm3,[rbx+14]
+
+exit3:
+jmp returnhere3
+
+///
+pMovementInfo:
+dq 0
+///
+
+axisXReadAOB: //"Disrupt_b64.dll"+1DE9D17:
+jmp newmem3
+returnhere3:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+charCoordWriteAOB: //"Disrupt_b64.dll"+CB2527:
+db 0F 29 80 20 01 00 00
+//Alt: movaps [rax+00000120],xmm0
+unregistersymbol(charCoordWriteAOB)
+dealloc(newmem2)
+normVectorReadAOB: //"Disrupt_b64.dll"+17BCD77:
+db F3 44 0F 10 40 4C
+//Alt: movss xmm8,[rax+4C]
+unregistersymbol(normVectorReadAOB)
+dealloc(newmem3)
+axisXReadAOB: //"Disrupt_b64.dll"+1DE9D17:
+db F3 0F 10 5B 14
+//Alt: movss xmm3,[rbx+14]
+unregistersymbol(axisXReadAOB)
+
+///
+
+dealloc(fFlyModeCoord)
+unregistersymbol(fFlyModeCoord)
+
+unregistersymbol(bFlyMode)
+unregistersymbol(bFirstActivate)
+unregistersymbol(pPlayerCoord)
+
+unregistersymbol(pNormVector)
+
+unregistersymbol(pMovementInfo)
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Activate</Action>
+          <Keys>
+            <Key>123</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>72237</ID>
+          <Description>"status"</Description>
+          <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:disable
+1:no-clip enabled
+</DropDownList>
+          <VariableType>Byte</VariableType>
+          <Address>bFlyMode</Address>
+          <Hotkeys>
+            <Hotkey>
+              <Action>Set Value</Action>
+              <Keys>
+                <Key>80</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>0</ID>
+              <ActivateSound>Activate</ActivateSound>
+            </Hotkey>
+            <Hotkey>
+              <Action>Set Value</Action>
+              <Keys>
+                <Key>18</Key>
+                <Key>80</Key>
+              </Keys>
+              <Value>0</Value>
+              <ID>1</ID>
+              <ActivateSound>Deactivate</ActivateSound>
+            </Hotkey>
+          </Hotkeys>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>72229</ID>
+          <Description>"X"</Description>
+          <VariableType>Float</VariableType>
+          <Address>pPlayerCoord</Address>
+          <Offsets>
+            <Offset>120</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>72230</ID>
+          <Description>"Y"</Description>
+          <VariableType>Float</VariableType>
+          <Address>pPlayerCoord</Address>
+          <Offsets>
+            <Offset>124</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>72231</ID>
+          <Description>"Z"</Description>
+          <VariableType>Float</VariableType>
+          <Address>pPlayerCoord</Address>
+          <Offsets>
+            <Offset>128</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>72238</ID>
+          <Description>""</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>72232</ID>
+              <Description>"pNormVector+4c"</Description>
+              <VariableType>Float</VariableType>
+              <Address>pNormVector</Address>
+              <Offsets>
+                <Offset>4C</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>72233</ID>
+              <Description>"pNormVector+50"</Description>
+              <VariableType>Float</VariableType>
+              <Address>pNormVector</Address>
+              <Offsets>
+                <Offset>50</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>72234</ID>
+              <Description>"pNormVector+54"</Description>
+              <VariableType>Float</VariableType>
+              <Address>pNormVector</Address>
+              <Offsets>
+                <Offset>54</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>72235</ID>
+              <Description>"axis X"</Description>
+              <VariableType>Float</VariableType>
+              <Address>pMovementInfo</Address>
+              <Offsets>
+                <Offset>14</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>72236</ID>
+              <Description>"axis Y"</Description>
+              <VariableType>Float</VariableType>
+              <Address>pMovementInfo</Address>
+              <Offsets>
+                <Offset>10</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>80</ID>
+      <Description>"Find Coords &amp; Teleport"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(GetPlayerCoords,Disrupt_b64.dll,0F 5C 00 0F 29 45 B0)
+aobscanmodule(TELEWP,Disrupt_b64.dll,01 C3 8B 41 18 89 02)
+alloc(newmem,$1000,"Disrupt_b64.dll"+CE6E7A)
+alloc(newmemw,$1000,"Disrupt_b64.dll"+49FE60)
+alloc(PlayerCoords,8)
+alloc(storecoords,256)
+alloc(store_waypoint,256)
+
+label(code)
+label(xpos)
+label(ypos)
+label(zpos)
+label(save)
+label(load)
+label(enable_save)
+label(enable_load)
+label(return)
+label(jump)
+label(zincrease)
+label(enable_jump)
+label(codew)
+label(returnw)
+label(wxpos)
+label(wypos)
+label(wzpos)
+label(wsave)
+label(wload)
+label(waypoint_load)
+registersymbol(TELEWP wxpos wypos wzpos waypoint_load)
+registersymbol(GetPlayerCoords PlayerCoords xpos ypos zpos enable_save enable_load enable_jump)
+
+storecoords:
+xpos:
+dd 0
+ypos:
+dd 0
+zpos:
+dd 0
+enable_save:
+dd 0
+enable_load:
+dd 0
+enable_jump:
+dd 0
+zincrease:
+dd (float)5
+waypoint_load:
+dd 0
+
+newmem:
+mov [PlayerCoords],rax
+cmp [enable_save],1
+je save
+cmp [enable_load],1
+je load
+cmp [waypoint_load],1
+je wload
+cmp [enable_jump],1
+je jump
+jmp code
+
+jump:
+mov [enable_jump],0
+fld [rax+00000008]
+fadd [zincrease]
+fstp [rax+00000008]
+jmp code
+
+save:
+mov [enable_save],0
+push rcx
+mov rcx,[rax+00000000]
+mov [xpos],rcx
+mov rcx,[rax+00000004]
+mov [ypos],rcx
+mov rcx,[rax+00000008]
+mov [zpos],rcx
+pop rcx
+jmp code
+
+load:
+mov [enable_load],0
+push rcx
+mov rcx,[xpos]
+mov [rax+00000000],rcx
+mov rcx,[ypos]
+mov [rax+00000004],rcx
+mov rcx,[zpos]
+mov [rax+00000008],rcx
+pop rcx
+jmp code
+
+wload:
+mov [waypoint_load],0
+push rcx
+mov rcx,[wxpos]
+mov [rax+00000000],rcx
+mov rcx,[wypos]
+mov [rax+00000004],rcx
+mov rcx,[wzpos]
+mov [rax+00000008],rcx
+pop rcx
+jmp code
+
+code:
+subps xmm0,[rax]
+movaps [rbp-50],xmm0
+jmp return
+
+
+GetPlayerCoords:
+jmp newmem
+nop 2
+return:
+
+PlayerCoords:
+dq 0
+
+//////////////////////////////////////////////////////
+////////////Save Waypoint Coords/////////////////////
+////////////////////////////////////////////////////
+
+store_waypoint:
+wxpos:
+dd 0
+wypos:
+dd 0
+wzpos:
+dd 0
+
+newmemw:
+jmp wsave
+
+wsave:
+push rbp
+mov rbp,[rcx+18]
+mov [wxpos],rbp
+mov rbp,[rcx+1C]
+mov [wypos],rbp
+mov rbp,[rcx+20]
+mov [wzpos],rbp
+pop rbp
+jmp codew
+
+codew:
+  mov eax,[rcx+18]
+  mov [rdx],eax
+  jmp returnw
+
+TELEWP+02:
+  jmp newmemw
+returnw:
+
+[DISABLE]
+
+GetPlayerCoords:
+db 0F 5C 00 0F 29 45 B0
+TELEWP+02:
+db 8B 41 18 89 02
+
+unregistersymbol(GetPlayerCoords PlayerCoords xpos ypos zpos enable_save enable_load enable_jump)
+unregistersymbol(TELEWP wxpos wypos wzpos waypoint_load)
+dealloc(newmem)
+dealloc(newmemw)
+dealloc(find_car)
+dealloc(PlayerCoords)
+dealloc(storecoords)
+dealloc(store_waypoint)
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>81</ID>
+          <Description>"Xcoord"</Description>
+          <VariableType>Float</VariableType>
+          <Address>PlayerCoords</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>84</ID>
+          <Description>"Ycoord"</Description>
+          <VariableType>Float</VariableType>
+          <Address>PlayerCoords</Address>
+          <Offsets>
+            <Offset>4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>82</ID>
+          <Description>"Zcoord"</Description>
+          <VariableType>Float</VariableType>
+          <Address>PlayerCoords</Address>
+          <Offsets>
+            <Offset>8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>411</ID>
+          <Description>"WXcoord"</Description>
+          <VariableType>Float</VariableType>
+          <Address>wxpos</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>412</ID>
+          <Description>"WYcoord"</Description>
+          <VariableType>Float</VariableType>
+          <Address>wypos</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>413</ID>
+          <Description>"WZcoord"</Description>
+          <VariableType>Float</VariableType>
+          <Address>wzpos</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>86</ID>
+          <Description>"Save Location"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>enable_save</Address>
+          <Hotkeys>
+            <Hotkey>
+              <Action>Set Value</Action>
+              <Keys>
+                <Key>112</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>0</ID>
+              <ActivateSound>Activate</ActivateSound>
+            </Hotkey>
+          </Hotkeys>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>87</ID>
+          <Description>"Teleport To Save"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>enable_load</Address>
+          <Hotkeys>
+            <Hotkey>
+              <Action>Set Value</Action>
+              <Keys>
+                <Key>113</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>0</ID>
+              <ActivateSound>Activate</ActivateSound>
+            </Hotkey>
+          </Hotkeys>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>414</ID>
+          <Description>"Teleport To Waypoint"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>waypoint_load</Address>
+          <Hotkeys>
+            <Hotkey>
+              <Action>Set Value</Action>
+              <Keys>
+                <Key>115</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>0</ID>
+              <ActivateSound>Activate</ActivateSound>
+            </Hotkey>
+          </Hotkeys>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>110</ID>
+          <Description>"Jump"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>enable_jump</Address>
+          <Hotkeys>
+            <Hotkey>
+              <Action>Set Value</Action>
+              <Keys>
+                <Key>114</Key>
+              </Keys>
+              <Value>1</Value>
+              <ID>0</ID>
+              <ActivateSound>Activate</ActivateSound>
+            </Hotkey>
+          </Hotkeys>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>98</ID>
+      <Description>"Get Health"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(GetPlayerHealth,Disrupt_b64.dll,F3 0F 10 41 18 F3 0F 5C 41 1C)
+alloc(newmem,$1000,"Disrupt_b64.dll"+194EB30)
+alloc(PHealth,8)
+alloc(THealth,8)
+
+label(code)
+label(return)
+
+registersymbol(GetPlayerHealth PHealth THealth)
+
+newmem:
+cmp [rcx+1C],(float)100
+jne code
+mov [PHealth],rcx
+jmp return
+
+code:
+movss xmm0,[rcx+18]
+jmp return
+
+GetPlayerHealth:
+jmp newmem
+return:
+
+PHealth:
+dd 0
+Thealth:
+dd 0
+
+[DISABLE]
+
+GetPlayerHealth:
+db F3 0F 10 41 18
+
+unregistersymbol(GetPlayerHealth PHealth THealth)
+dealloc(newmem)
+dealloc(PHealth)
+dealloc(THealth)
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>99</ID>
+          <Description>"Player Health"</Description>
+          <VariableType>Float</VariableType>
+          <Address>PHealth</Address>
+          <Offsets>
+            <Offset>18</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>438</ID>
+      <Description>"Find Vehicle Coords"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(CARCOORDS,Disrupt_b64.dll,0F 5C 49 70 0F 28 C1 0F C6) // should be unique
+alloc(newmem,$1000,"Disrupt_b64.dll"+276C303)
+alloc(find_car,10)
+
+label(code)
+label(return)
+registersymbol(CARCOORDS find_car)
+
+find_car:
+dd 0
+
+newmem:
+mov [find_car],rcx
+jmp code
+
+code:
+  subps xmm1,[rcx+70]
+  movaps xmm0,xmm1
+  jmp return
+
+CARCOORDS:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+CARCOORDS:
+  db 0F 5C 49 70 0F 28 C1
+
+unregistersymbol(CARCOORDS find_car)
+dealloc(newmem)
+dealloc(find_car)
+{
+// ORIGINAL CODE - INJECTION POINT: "Disrupt_b64.dll"+276C303
+
+"Disrupt_b64.dll"+276C2D4: 0F 28 81 D0 00 00 00  -  movaps xmm0,[rcx+000000D0]
+"Disrupt_b64.dll"+276C2DB: 0F 29 34 24           -  movaps [rsp],xmm6
+"Disrupt_b64.dll"+276C2DF: 0F C6 C0 FF           -  shufps xmm0,xmm0,-01
+"Disrupt_b64.dll"+276C2E3: 0F 59 02              -  mulps xmm0,[rdx]
+"Disrupt_b64.dll"+276C2E6: 0F 58 81 E0 00 00 00  -  addps xmm0,[rcx+000000E0]
+"Disrupt_b64.dll"+276C2ED: 0F 29 81 E0 00 00 00  -  movaps [rcx+000000E0],xmm0
+"Disrupt_b64.dll"+276C2F4: 0F 28 59 40           -  movaps xmm3,[rcx+40]
+"Disrupt_b64.dll"+276C2F8: 0F 28 32              -  movaps xmm6,[rdx]
+"Disrupt_b64.dll"+276C2FB: 41 0F 28 08           -  movaps xmm1,[r8]
+"Disrupt_b64.dll"+276C2FF: 0F 28 61 20           -  movaps xmm4,[rcx+20]
+// ---------- INJECTING HERE ----------
+"Disrupt_b64.dll"+276C303: 0F 5C 49 70           -  subps xmm1,[rcx+70]
+"Disrupt_b64.dll"+276C307: 0F 28 C1              -  movaps xmm0,xmm1
+// ---------- DONE INJECTING  ----------
+"Disrupt_b64.dll"+276C30A: 0F C6 C1 C9           -  shufps xmm0,xmm1,-37
+"Disrupt_b64.dll"+276C30E: 0F 59 C6              -  mulps xmm0,xmm6
+"Disrupt_b64.dll"+276C311: 0F C6 F6 C9           -  shufps xmm6,xmm6,-37
+"Disrupt_b64.dll"+276C315: 0F 59 F1              -  mulps xmm6,xmm1
+"Disrupt_b64.dll"+276C318: 0F 28 CC              -  movaps xmm1,xmm4
+"Disrupt_b64.dll"+276C31B: 0F 5C F0              -  subps xmm6,xmm0
+"Disrupt_b64.dll"+276C31E: 0F 28 41 30           -  movaps xmm0,[rcx+30]
+"Disrupt_b64.dll"+276C322: 0F 14 C8              -  unpcklps xmm1,xmm0
+"Disrupt_b64.dll"+276C325: 0F 15 E0              -  unpckhps xmm4,xmm0
+"Disrupt_b64.dll"+276C328: 0F 28 D1              -  movaps xmm2,xmm1
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>439</ID>
+          <Description>"CarX"</Description>
+          <VariableType>Float</VariableType>
+          <Address>find_car</Address>
+          <Offsets>
+            <Offset>70</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>440</ID>
+          <Description>"CarY"</Description>
+          <VariableType>Float</VariableType>
+          <Address>find_car</Address>
+          <Offsets>
+            <Offset>74</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>441</ID>
+          <Description>"CarZ"</Description>
+          <VariableType>Float</VariableType>
+          <Address>find_car</Address>
+          <Offsets>
+            <Offset>78</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="20000000">
+      <Description>cartest</Description>
+      <AddressString>Disrupt_b64.dll+2764AA7</AddressString>
+      <Before>
+        <Byte>58</Byte>
+        <Byte>D1</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C2</Byte>
+      </Before>
+      <Actual>
+        <Byte>0F</Byte>
+        <Byte>29</Byte>
+        <Byte>47</Byte>
+        <Byte>50</Byte>
+      </Actual>
+      <After>
+        <Byte>80</Byte>
+        <Byte>7F</Byte>
+        <Byte>10</Byte>
+        <Byte>06</Byte>
+        <Byte>75</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>camgun</Description>
+      <AddressString>Disrupt_b64.dll+1E29961</AddressString>
+      <Before>
+        <Byte>88</Byte>
+        <Byte>FC</Byte>
+        <Byte>89</Byte>
+        <Byte>4A</Byte>
+        <Byte>FC</Byte>
+      </Before>
+      <Actual>
+        <Byte>FF</Byte>
+        <Byte>4F</Byte>
+        <Byte>08</Byte>
+      </Actual>
+      <After>
+        <Byte>49</Byte>
+        <Byte>FF</Byte>
+        <Byte>C8</Byte>
+        <Byte>75</Byte>
+        <Byte>E7</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>Change of movss [rdi+000003A0],xmm0</Description>
+      <AddressString>Disrupt_b64.dll+833E65</AddressString>
+      <Before>
+        <Byte>46</Byte>
+        <Byte>14</Byte>
+        <Byte>0F</Byte>
+        <Byte>5B</Byte>
+        <Byte>C0</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>A0</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>46</Byte>
+        <Byte>14</Byte>
+        <Byte>89</Byte>
+        <Byte>87</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Structures StructVersion="2">
+    <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="12" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="20" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="36" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="44" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="52" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="60" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="64" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="76" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="84" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="92" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="100" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="108" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="116" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="124" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="140" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="145" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="148" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="153" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="156" Vartype="4 Bytes" Bytesize="4" RLECount="14" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="212" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="220" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="228" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="236" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="260" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="268" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="276" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="284" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="292" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="308" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="312" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="316" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="320" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="344" Vartype="Float" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="356" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="372" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="388" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="396" Vartype="Byte" Bytesize="1" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="398" Vartype="2 Bytes" Bytesize="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="400" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="412" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="420" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="428" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="432" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="444" Vartype="Byte" Bytesize="1" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="449" Vartype="String" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="453" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="456" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="476" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="492" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="508" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="516" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="548" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="556" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="560" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="564" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="572" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="580" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="588" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="596" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="604" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="612" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="620" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="628" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="644" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="660" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="672" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="680" Vartype="4 Bytes" Bytesize="4" RLECount="9" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="716" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="724" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="732" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="740" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="748" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="756" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="764" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="772" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="780" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="788" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="796" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="812" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="828" Vartype="4 Bytes" Bytesize="4" RLECount="14" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="884" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="892" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="900" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="908" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="916" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="924" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="932" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="940" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="948" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="956" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="964" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="980" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="996" Vartype="4 Bytes" Bytesize="4" RLECount="14" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1052" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1060" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1068" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1076" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1084" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1092" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1100" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1108" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1116" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1124" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1132" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1148" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1153" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1156" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1161" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1164" Vartype="4 Bytes" Bytesize="4" RLECount="14" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1220" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1228" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1232" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1236" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1240" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1252" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1260" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1268" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1276" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1284" Vartype="Byte" Bytesize="1" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1289" Vartype="String" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1293" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1296" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1316" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1320" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1324" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1328" Vartype="4 Bytes" Bytesize="4" RLECount="15" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1388" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1396" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1404" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1412" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1436" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1444" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1452" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1460" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1468" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1484" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1488" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1492" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1496" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1516" Vartype="Float" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1532" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1548" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1556" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1560" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1568" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1572" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1580" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1604" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1612" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1620" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1628" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1636" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1652" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1668" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1684" Vartype="Float" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1700" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1716" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1724" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1732" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1740" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1748" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1772" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1780" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1788" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1796" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1804" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1820" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1836" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1852" Vartype="Float" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1868" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1884" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1892" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1896" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1904" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1908" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1956" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1964" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1972" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1988" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2004" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2020" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2024" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2044" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2052" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2064" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2072" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2076" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2124" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2132" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2140" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2156" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2172" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2188" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2192" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2212" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2220" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2232" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2240" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2244" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2292" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2300" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2308" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2324" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2340" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2356" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2364" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2380" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2388" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2404" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2412" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2420" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2428" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2436" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2444" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2452" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2460" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2468" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2476" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2492" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2497" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2500" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2505" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2508" Vartype="4 Bytes" Bytesize="4" RLECount="14" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2564" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2572" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2576" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2580" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2588" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2596" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2604" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2612" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2620" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2628" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2636" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2644" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2660" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2665" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2668" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2673" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2676" Vartype="4 Bytes" Bytesize="4" RLECount="14" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2732" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2740" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2748" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2764" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2772" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2796" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2804" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2812" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2828" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2833" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2836" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2841" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2844" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2860" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2868" Vartype="4 Bytes" Bytesize="4" RLECount="9" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2904" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2912" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2916" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2932" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2940" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2964" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="2972" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2980" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2996" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3001" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3004" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3009" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3012" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3028" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3036" Vartype="4 Bytes" Bytesize="4" RLECount="10" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3076" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3080" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3088" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3092" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3100" Vartype="Float" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3112" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3120" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3140" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3148" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3196" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3204" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3208" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3228" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3236" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3260" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3264" Vartype="4 Bytes" Bytesize="4" RLECount="10" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3304" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3312" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3320" Vartype="Byte" Bytesize="1" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3326" Vartype="2 Bytes" Bytesize="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3328" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3332" Vartype="Float" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3344" Vartype="Byte" Bytesize="1" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3349" Vartype="String" Bytesize="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3355" Vartype="Byte" Bytesize="1" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3356" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3364" Vartype="Float" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3376" Vartype="String" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3380" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3384" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3388" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3396" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3404" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3412" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3416" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3420" Vartype="Pointer" Bytesize="8" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3452" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3456" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3464" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3468" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3476" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3484" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3500" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3504" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3512" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3516" Vartype="Pointer" Bytesize="8" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3548" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3552" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3560" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3564" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3572" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3580" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3588" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3604" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3612" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3644" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3652" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3668" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3676" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3688" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3692" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3708" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3716" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3724" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3748" Vartype="Pointer" Bytesize="8" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3772" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3788" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3796" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3804" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3812" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3816" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3820" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3828" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3832" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3836" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3844" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3848" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3852" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3860" Vartype="Float" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3876" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3880" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3884" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3892" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3896" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3904" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3908" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3916" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3920" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3924" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3928" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3936" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3940" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3948" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3956" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3960" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3964" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3972" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3976" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3984" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4004" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4012" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4016" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="4020" Vartype="Pointer" Bytesize="8" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4036" Vartype="String" Bytesize="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4042" Vartype="Byte" Bytesize="1" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4044" Vartype="Pointer" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4052" Vartype="String" Bytesize="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4057" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4060" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4068" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="4072" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4084" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Hexadecimal"/>
+        <Element Offset="4092" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+      </Elements>
+    </Structure>
+  </Structures>
+</CheatTable>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MENYOO Watch Dogs Trainer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="/main.js" defer></script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="window">
+        <!-- Header banner -->
+        <header class="header">
+          <div class="header__brand">
+            <img src="./assets/Icon.png" alt="MENYOO" class="header__logo logo-icon brand-icon app-icon" />
+            <div class="header__text">
+              <h1 class="header__title">MENYOO WATCH DOGS TRAINER</h1>
+              <p class="header__subtitle">Watch Dogs 2014 Steam Trainer</p>
+            </div>
+          </div>
+          <div class="header__status" data-trainer-status-text>Trainer not loaded</div>
+        </header>
+
+        <!-- Main body: left panel + right cheat panel -->
+        <div class="body">
+          <!-- Left panel -->
+          <aside class="left-panel">
+            <h2 class="panel-title">Watch Dogs</h2>
+            <div class="panel-sep"></div>
+
+            <div class="info-rows">
+              <div class="info-row">
+                <span class="info-label">Process Name:</span>
+                <span class="info-value" data-process-name>watch_dogs.exe</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Game Status:</span>
+                <span class="info-value" data-game-status>Game Is OFF</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Process ID:</span>
+                <span class="info-value" data-process-id>0</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Trainer:</span>
+                <span class="info-value" data-trainer-status>Not loaded</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Diagnostic Mode:</span>
+                <span class="info-value" data-diag-mode>On</span>
+              </div>
+            </div>
+
+            <p class="hint-text" data-hint-text>Launch Watch Dogs from Steam, load into Story Mode, then open this trainer.</p>
+
+            <div class="log-area">
+              <div class="log-header">
+                <span class="log-title">Error Log</span>
+                <div class="log-controls">
+                  <button class="log-tab log-tab--refresh" data-action="refresh-logs">Refresh</button>
+                </div>
+              </div>
+              <pre class="log-view" data-log-output data-empty="true">No errors.</pre>
+            </div>
+
+            <div class="left-buttons">
+              <button class="btn btn--subtle" data-action="open-release">Open Release Folder</button>
+              <button class="btn btn--danger" data-action="exit">Exit</button>
+            </div>
+          </aside>
+
+          <!-- Right cheat panel -->
+          <section class="cheat-panel">
+            <div class="cheat-panel__header">
+              <h2 class="panel-title">CHEATS</h2>
+              <div class="cheat-panel__actions">
+                <button class="btn btn--sm" data-action="activate-all">Activate All</button>
+                <button class="btn btn--sm" data-action="deactivate-all">Deactivate All</button>
+              </div>
+            </div>
+            <p class="cheat-panel__diag" data-cheats-summary>Cheats disabled in diagnostic mode.</p>
+            <div class="panel-sep"></div>
+
+            <div class="cheat-table">
+              <div class="cheat-table__head">
+                <span class="col-hk">HOTKEY</span>
+                <span class="col-name">CHEAT NAME</span>
+                <span class="col-state">STATE</span>
+              </div>
+              <div class="cheat-table__sep"></div>
+              <div class="cheat-table__body" data-cheat-table-body></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

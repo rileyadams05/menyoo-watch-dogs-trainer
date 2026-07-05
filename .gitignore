@@ -1,0 +1,66 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Rust / Tauri
+target/
+**/target/
+dist/
+**/dist/
+dist-ssr/
+**/dist-ssr/
+out/
+**/out/
+*.local
+
+# Build outputs
+release/
+**/release/
+/build/
+/trainer/build/
+/trainer/build_*/
+/trainer/build-loader/
+/trainer/build-loader-*/
+*.exe
+*.dll
+*.pdb
+*.obj
+*.lib
+*.exp
+*.ilk
+*.msi
+*.msix
+*.appx
+*.appxbundle
+*.zip
+*.7z
+*.tar
+*.gz
+*.dmg
+*.AppImage
+
+# CMake
+CMakeFiles/
+**/CMakeFiles/
+CMakeCache.txt
+**/CMakeCache.txt
+cmake_install.cmake
+**/cmake_install.cmake
+
+# Logs
+logs/
+*.log
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sw?
