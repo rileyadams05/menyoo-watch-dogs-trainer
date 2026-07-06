@@ -4,6 +4,7 @@ use std::collections::{HashMap, HashSet};
 use std::ffi::{c_void, OsStr};
 use std::fs::{self, OpenOptions};
 use std::io::{Read, Seek, SeekFrom, Write};
+#[cfg(windows)]
 use std::os::windows::ffi::OsStrExt;
 use std::path::{Path, PathBuf};
 use std::sync::mpsc::{self, Receiver};
