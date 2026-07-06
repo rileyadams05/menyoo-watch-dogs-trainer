@@ -43,7 +43,7 @@ body {
   background-repeat: no-repeat;
 }
 
-/* ── Body layout ────────────────────────────────────── */
+/* ── Body layout ───────────────────────────────────────────────────────────── */
 .body {
   display: flex;
   flex: 1;
@@ -53,10 +53,18 @@ body {
   align-items: flex-start;
 }
 
-/* ── Left panel ─────────────────────────────────────── */
-.left-panel {
-  width: 300px;
+/* ── Sidebar wrapper ─────────────────────────────────────────────────────── */
+.sidebar {
+  width: 320px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+/* ── Left panel ──────────────────────────────────────────────────────────── */
+.left-panel {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -305,7 +313,7 @@ body {
   background: rgba(40, 8, 16, 0.64);
 }
 
-/* ── Cheat panel ────────────────────────────────────── */
+/* ── Cheat panel ─────────────────────────────────────────────────────────── */
 .cheat-panel {
   flex: 1;
   background: var(--panel);

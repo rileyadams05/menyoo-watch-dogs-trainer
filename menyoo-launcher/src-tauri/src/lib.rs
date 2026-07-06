@@ -139,8 +139,8 @@ impl Default for TrainerStatus {
             trainer_stage: TrainerStage::NotLoaded,
             status_message: Some("Waiting for Watch Dogs...".into()),
             verifying_seconds_remaining: None,
-            diagnostic_mode: true,
-            cheats_disabled_reason: Some("Cheats disabled in diagnostic mode.".into()),
+            diagnostic_mode: false,
+            cheats_disabled_reason: None,
             last_error: None,
             cheats: build_default_cheats(),
             timestamp: Utc::now().to_rfc3339(),
@@ -992,9 +992,9 @@ fn read_diagnostic_mode(paths: &Paths) -> (bool, Option<SystemTime>) {
                 }
             }
         }
-        return (true, modified);
+        return (false, modified);
     }
-    (true, None)
+    (false, None)
 }
 
 fn enforce_diagnostic_restrictions(

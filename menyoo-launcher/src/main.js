@@ -78,7 +78,6 @@ function cacheDom() {
   els.setManualPath = q('[data-action="set-manual-path"]');
   els.activateAll = q('[data-action="activate-all"]');
   els.deactivateAll = q('[data-action="deactivate-all"]');
-  els.openRelease = q('[data-action="open-release"]');
   els.exitApp = q('[data-action="exit"]');
   els.refreshLogs = q('[data-action="refresh-logs"]');
   els.logOutput = q("[data-log-output]");
@@ -343,14 +342,6 @@ async function deactivateAllCheats() {
   }
 }
 
-async function openReleaseFolder() {
-  try {
-    await invoke("open_release_folder");
-  } catch (err) {
-    console.error("Failed to open release folder", err);
-  }
-}
-
 async function setManualGamePath() {
   try {
     const selected = await open({
@@ -455,7 +446,6 @@ async function refreshStatus(options = {}) {
 function attachEvents() {
   els.activateAll.addEventListener("click", activateAllCheats);
   els.deactivateAll.addEventListener("click", deactivateAllCheats);
-  els.openRelease.addEventListener("click", openReleaseFolder);
   els.exitApp.addEventListener("click", exitApp);
   els.refreshLogs.addEventListener("click", loadLogs);
   els.setManualPath.addEventListener("click", setManualGamePath);
