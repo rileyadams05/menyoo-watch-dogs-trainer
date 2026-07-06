@@ -11,15 +11,6 @@ const STAGE_LABELS = {
   FAILED: "Failed",
 };
 
-const HEADER_STATUS = {
-  NOT_LOADED: "Trainer not loaded",
-  WAITING: "Waiting to inject",
-  INJECTING: "Injecting trainer...",
-  VERIFYING: "Verifying diagnostic load",
-  DIAGNOSTIC_LOADED: "Diagnostic loaded",
-  FAILED: "Trainer failed",
-};
-
 let statusState = null;
 let capturing = null;
 let unlistenStatus = null;
@@ -65,38 +56,32 @@ function q(selector) {
 }
 
 function cacheDom() {
-  els.processName = q("[data-process-name]");
-  els.gameStatus = q("[data-game-status]");
-  els.processId = q("[data-process-id]");
-  els.trainerStatus = q("[data-trainer-status]");
-  els.trainerStatusText = q("[data-trainer-status-text]");
-  els.diagMode = q("[data-diag-mode]");
-  els.hintText = q("[data-hint-text]");
-  els.cheatsSummary = q("[data-cheats-summary]");
-  els.gameSource = q("[data-game-source]");
-  els.gamePath = q("[data-game-path]");
-  els.setManualPath = q('[data-action="set-manual-path"]');
-  els.activateAll = q('[data-action="activate-all"]');
-  els.deactivateAll = q('[data-action="deactivate-all"]');
-  els.exitApp = q('[data-action="exit"]');
-  els.refreshLogs = q('[data-action="refresh-logs"]');
-  els.logOutput = q("[data-log-output]");
+  els.processName    = q("[data-process-name]");
+  els.gameStatus     = q("[data-game-status]");
+  els.processId      = q("[data-process-id]");
+  els.trainerStatus  = q("[data-trainer-status]");
+  els.diagMode       = q("[data-diag-mode]");
+  els.hintText       = q("[data-hint-text]");
+  els.cheatsSummary  = q("[data-cheats-summary]");
+  els.gameSource     = q("[data-game-source]");
+  els.gamePath       = q("[data-game-path]");
+  els.setManualPath  = q('[data-action="set-manual-path"]');
+  els.activateAll    = q('[data-action="activate-all"]');
+  els.deactivateAll  = q('[data-action="deactivate-all"]');
+  els.exitApp        = q('[data-action="exit"]');
+  els.refreshLogs    = q('[data-action="refresh-logs"]');
+  els.logOutput      = q("[data-log-output]");
   els.cheatTableBody = q("[data-cheat-table-body]");
-}
-
-function normalise(value) {
-  if (typeof value === "string" && value.trim() === "") return null;
-  return value ?? null;
 }
 
 function renderStatus(status, options = {}) {
   statusState = status;
 
   els.processName.textContent = status.process_name;
-  els.processId.textContent = status.process_id ?? 0;
+  els.processId.textContent   = status.process_id ?? 0;
 
   const gameOn = Boolean(status.game_on);
-  els.gameStatus.textContent = gameOn ? "Game Is ON" : "Game Is OFF";
+  els.gameStatus.textContent  = gameOn ? "Game Is ON" : "Game Is OFF";
   els.gameStatus.dataset.state = gameOn ? "on" : "off";
 
   const stageLabel = STAGE_LABELS[status.trainer_stage] ?? status.trainer_stage;
@@ -106,44 +91,40 @@ function renderStatus(status, options = {}) {
     els.trainerStatus.dataset.state = "on";
   } else if (status.trainer_stage === "FAILED") {
     els.trainerStatus.dataset.state = "off";
-  } else if (status.trainer_stage === "WAITING" || status.trainer_stage === "INJECTING" || status.trainer_stage === "VERIFYING") {
+  } else if (["WAITING", "INJECTING", "VERIFYING"].includes(status.trainer_stage)) {
     els.trainerStatus.dataset.state = "cyan";
   } else {
     delete els.trainerStatus.dataset.state;
   }
 
-  const headerText = HEADER_STATUS[status.trainer_stage] ?? "Trainer not loaded";
-  els.trainerStatusText.textContent = headerText;
-  els.trainerStatusText.dataset.stage = status.trainer_stage;
-
-  els.diagMode.textContent = status.diagnostic_mode ? "On" : "Off";
-  els.diagMode.dataset.state = status.diagnostic_mode ? "cyan" : "off";
+  els.diagMode.textContent     = status.diagnostic_mode ? "On" : "Off";
+  els.diagMode.dataset.state   = status.diagnostic_mode ? "cyan" : "off";
 
   let platformName = "Unknown";
-  if (status.game_platform === "Steam") platformName = "Steam";
+  if      (status.game_platform === "Steam")          platformName = "Steam";
   else if (status.game_platform === "UbisoftConnect") platformName = "Ubisoft Connect";
-  else if (status.game_platform === "EpicGames") platformName = "Epic Games";
-  else if (status.game_platform === "Manual") platformName = "Manual";
+  else if (status.game_platform === "EpicGames")      platformName = "Epic Games";
+  else if (status.game_platform === "Manual")         platformName = "Manual";
 
   els.gameSource.textContent = platformName;
-  els.gamePath.textContent = status.game_path ?? "None";
+  els.gamePath.textContent   = status.game_path ?? "None";
 
   if (!status.game_path) {
-    els.gameSource.textContent = "Not found";
-    els.hintText.textContent = "Could not detect Watch Dogs install. Please select your install folder manually.";
-    els.hintText.style.color = "var(--orange)";
+    els.gameSource.textContent  = "Not found";
+    els.hintText.textContent    = "Could not detect Watch Dogs install. Please select your install folder manually.";
+    els.hintText.style.color    = "var(--orange)";
   }
 
   const visibleLastError = isVisibleErrorMessage(status.last_error);
   if (visibleLastError) {
-    els.hintText.textContent = status.last_error;
-    els.hintText.style.color = "var(--red)";
+    els.hintText.textContent  = status.last_error;
+    els.hintText.style.color  = "var(--red)";
     if (!options.suppressVisibleLog) addVisibleError(status.last_error);
   } else if (!gameOn && status.game_path) {
-    els.hintText.textContent = "Launch Watch Dogs, load into Story Mode, then open this trainer.";
-    els.hintText.style.color = "var(--orange)";
+    els.hintText.textContent  = "Launch Watch Dogs, load into Story Mode, then activate the trainer.";
+    els.hintText.style.color  = "var(--orange)";
   } else if (gameOn) {
-    els.hintText.textContent = "";
+    els.hintText.textContent  = "";
   }
 
   const enabledCount = status.cheats.filter((c) => c.enabled).length;
@@ -153,8 +134,8 @@ function renderStatus(status, options = {}) {
     els.cheatsSummary.textContent = `${enabledCount} of ${status.cheats.length} cheats active`;
   }
 
-  els.activateAll.disabled = Boolean(status.diagnostic_mode);
-  els.activateAll.textContent = status.diagnostic_mode ? "Cheats disabled in diagnostic mode." : "Activate All";
+  els.activateAll.disabled    = Boolean(status.diagnostic_mode);
+  els.activateAll.textContent = "Activate All";
 
   renderCheatTable(status);
 }
@@ -168,7 +149,7 @@ function renderCheatTable(status) {
   status.cheats.forEach((cheat) => {
     if (cheat.category !== lastCat) {
       const catEl = document.createElement("div");
-      catEl.className = "cat-header";
+      catEl.className   = "cat-header";
       catEl.textContent = cheat.category;
       els.cheatTableBody.appendChild(catEl);
       lastCat = cheat.category;
@@ -176,34 +157,34 @@ function renderCheatTable(status) {
 
     const row = document.createElement("div");
     row.className = "cheat-row";
-    if (capturing === cheat.name) row.classList.add("is-capturing");
-    if (cheat.enabled && !cheat.locked) row.classList.add("is-on");
+    if (capturing === cheat.name)           row.classList.add("is-capturing");
+    if (cheat.enabled && !cheat.locked)     row.classList.add("is-on");
 
     const hkCell = document.createElement("div");
     hkCell.className = "hk-cell";
 
     if (cheat.hotkey_vk && cheat.hotkey_vk > 0) {
       const keyEl = document.createElement("button");
-      keyEl.className = "hk-key";
+      keyEl.className   = "hk-key";
       keyEl.textContent = cheat.hotkey_label ?? `VK_${cheat.hotkey_vk}`;
       keyEl.addEventListener("click", () => beginCapture(cheat.name));
       hkCell.appendChild(keyEl);
 
       const clrEl = document.createElement("button");
-      clrEl.className = "hk-clear";
+      clrEl.className   = "hk-clear";
       clrEl.textContent = "x";
       clrEl.addEventListener("click", (e) => { e.stopPropagation(); clearHotkey(cheat.name); });
       hkCell.appendChild(clrEl);
     } else {
       const bindEl = document.createElement("button");
-      bindEl.className = "hk-bind";
+      bindEl.className   = "hk-bind";
       bindEl.textContent = capturing === cheat.name ? "Press key..." : "+ BIND";
       bindEl.addEventListener("click", () => beginCapture(cheat.name));
       hkCell.appendChild(bindEl);
     }
 
     const nameCell = document.createElement("div");
-    nameCell.className = "cheat-name";
+    nameCell.className   = "cheat-name";
     if (capturing === cheat.name) nameCell.classList.add("is-capturing");
     nameCell.textContent = cheat.name;
 
@@ -222,23 +203,17 @@ function renderCheatTable(status) {
       stateFlag = status.diagnostic_mode ? "disabled" : "off";
     } else if (cheat.enabled) {
       if (trainerStage === "DIAGNOSTIC_LOADED") {
-        stateText = "ON";
-        stateFlag = "on";
+        stateText = "ON";        stateFlag = "on";
       } else if (trainerStage === "VERIFYING") {
-        stateText = "VERIFYING";
-        stateFlag = "verifying";
-      } else if (trainerStage === "INJECTING" || trainerStage === "WAITING") {
-        stateText = "QUEUED";
-        stateFlag = "queued";
+        stateText = "VERIFYING"; stateFlag = "verifying";
       } else {
-        stateText = "QUEUED";
-        stateFlag = "queued";
+        stateText = "QUEUED";    stateFlag = "queued";
       }
     }
 
     stateBtn.dataset.state = stateFlag;
-    stateBtn.textContent = stateText;
-    stateBtn.disabled = cheat.locked || status.diagnostic_mode;
+    stateBtn.textContent   = stateText;
+    stateBtn.disabled      = cheat.locked || status.diagnostic_mode;
     stateBtn.addEventListener("click", () => toggleCheat(cheat.id, !cheat.enabled));
     stateCell.appendChild(stateBtn);
 
@@ -248,17 +223,14 @@ function renderCheatTable(status) {
 
   if (capturing) {
     const banner = document.createElement("div");
-    banner.className = "capture-banner";
+    banner.className   = "capture-banner";
     banner.textContent = `  Press a key to bind:  ${capturing}     (ESC = cancel  |  Del = clear)`;
     els.cheatTableBody.appendChild(banner);
   }
 }
 
 function beginCapture(cheatName) {
-  if (capturing === cheatName) {
-    cancelCapture();
-    return;
-  }
+  if (capturing === cheatName) { cancelCapture(); return; }
   capturing = cheatName;
   if (statusState) renderCheatTable(statusState);
 }
@@ -285,10 +257,7 @@ async function handleCapturedKey(event) {
   const cheatName = capturing;
   const vk = event.keyCode || event.which;
 
-  if (event.key === "Escape") {
-    cancelCapture();
-    return;
-  }
+  if (event.key === "Escape") { cancelCapture(); return; }
 
   if (event.key === "Delete") {
     try {
@@ -346,11 +315,10 @@ async function setManualGamePath() {
   try {
     const selected = await open({
       directory: true,
-      multiple: false,
-      title: 'Select Watch Dogs Install Folder'
+      multiple:  false,
+      title:     'Select Watch Dogs Install Folder'
     });
-    if (selected === null) return; // User cancelled
-    
+    if (selected === null) return;
     const status = await invoke("set_manual_game_path", { path: selected });
     renderStatus(status);
   } catch (err) {
@@ -371,21 +339,19 @@ function prettyError(err) {
 function isVisibleErrorMessage(value) {
   const line = String(value ?? "").trim();
   if (!line) return false;
-  if (SUPPRESSED_LOG_PATTERNS.some((pattern) => pattern.test(line))) return false;
-  return VISIBLE_ERROR_PATTERNS.some((pattern) => pattern.test(line));
+  if (SUPPRESSED_LOG_PATTERNS.some((p) => p.test(line))) return false;
+  return VISIBLE_ERROR_PATTERNS.some((p) => p.test(line));
 }
 
 function uniqueMessages(messages) {
   const seen = new Set();
   const result = [];
-
   messages.forEach((message) => {
     const text = String(message ?? "").trim();
     if (!text || seen.has(text)) return;
     seen.add(text);
     result.push(text);
   });
-
   return result;
 }
 
@@ -401,13 +367,11 @@ function filterVisibleErrors(logText) {
 function renderVisibleErrors(messages = visibleErrorMessages) {
   const errors = uniqueMessages(messages);
   visibleErrorMessages = errors;
-
   if (errors.length === 0) {
-    els.logOutput.textContent = EMPTY_LOG_TEXT;
+    els.logOutput.textContent  = EMPTY_LOG_TEXT;
     els.logOutput.dataset.empty = "true";
     return;
   }
-
   els.logOutput.textContent = errors.join("\n");
   delete els.logOutput.dataset.empty;
 }
@@ -418,7 +382,7 @@ function addVisibleError(message) {
 }
 
 async function loadLogs() {
-  els.logOutput.textContent = "Checking errors...";
+  els.logOutput.textContent   = "Checking errors...";
   els.logOutput.dataset.empty = "true";
 
   const results = await Promise.allSettled([
@@ -444,12 +408,11 @@ async function refreshStatus(options = {}) {
 }
 
 function attachEvents() {
-  els.activateAll.addEventListener("click", activateAllCheats);
+  els.activateAll.addEventListener("click",   activateAllCheats);
   els.deactivateAll.addEventListener("click", deactivateAllCheats);
-  els.exitApp.addEventListener("click", exitApp);
-  els.refreshLogs.addEventListener("click", loadLogs);
+  els.exitApp.addEventListener("click",       exitApp);
+  els.refreshLogs.addEventListener("click",   loadLogs);
   els.setManualPath.addEventListener("click", setManualGamePath);
-
   document.addEventListener("keydown", handleCapturedKey, true);
 }
 
