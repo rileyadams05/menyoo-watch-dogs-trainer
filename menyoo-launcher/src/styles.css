@@ -2,7 +2,7 @@
   --bg: #06080a;
   --panel: rgba(0, 8, 12, 0.54);
   --panel-2: rgba(4, 12, 16, 0.48);
-  --border: rgba(0, 220, 255, 0.12);
+  --border: rgba(0, 220, 255, 0.10);
   --border-soft: rgba(184, 224, 232, 0.09);
   --cyan: #20beee;
   --white: #eef6f8;
@@ -43,92 +43,6 @@ body {
   background-repeat: no-repeat;
 }
 
-/* ── Header ─────────────────────────────────────────── */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 18px;
-  background: rgba(0, 8, 12, 0.38);
-  border-bottom: 1px solid rgba(0, 220, 255, 0.10);
-  backdrop-filter: blur(4px);
-  flex-shrink: 0;
-  height: 276px;
-}
-
-.header__brand {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  min-width: 0;
-}
-
-.logo-icon,
-.brand-icon,
-.app-icon {
-  width: 256px;
-  height: 256px;
-  min-width: 256px;
-  min-height: 256px;
-  max-width: 256px;
-  max-height: 256px;
-  object-fit: contain;
-  image-rendering: auto;
-}
-
-.header__logo {
-  border: 0;
-  border-radius: 0;
-}
-
-.header__text {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.header__title {
-  font-size: 28px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-}
-
-.header__subtitle {
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: rgba(164, 232, 244, 0.86);
-  letter-spacing: 0.10em;
-  line-height: 1.2;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.40);
-}
-
-.header__status {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--muted);
-  text-align: right;
-  letter-spacing: 0.04em;
-}
-
-.header__status[data-stage="WAITING"],
-.header__status[data-stage="INJECTING"],
-.header__status[data-stage="VERIFYING"] {
-  color: var(--cyan);
-}
-
-.header__status[data-stage="DIAGNOSTIC_LOADED"] {
-  color: var(--green);
-}
-
-.header__status[data-stage="FAILED"] {
-  color: var(--red);
-}
-
 /* ── Body layout ────────────────────────────────────── */
 .body {
   display: flex;
@@ -136,6 +50,7 @@ body {
   overflow: hidden;
   padding: 8px;
   gap: 8px;
+  align-items: flex-start;
 }
 
 /* ── Left panel ─────────────────────────────────────── */
@@ -146,19 +61,35 @@ body {
   border: 1px solid var(--border);
   border-radius: 6px;
   backdrop-filter: blur(4px);
-  padding: 10px 12px;
+  padding: 0 0 10px 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
+/* compact title bar at top of left panel */
+.panel-title-bar {
+  background: rgba(0, 180, 220, 0.10);
+  border-bottom: 1px solid rgba(0, 220, 255, 0.12);
+  padding: 6px 10px;
+}
+
 .panel-title {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: rgba(164, 232, 244, 0.92);
+  line-height: 1.2;
+  display: block;
+}
+
+/* panel-title used standalone in cheat panel (no title bar wrapper) */
+.cheat-panel .panel-title {
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--white);
-  padding: 2px 0;
 }
 
 .panel-sep {
@@ -171,6 +102,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding: 0 10px;
 }
 
 .info-row {
@@ -207,7 +139,7 @@ body {
   font-size: 11px;
   color: var(--orange);
   line-height: 1.4;
-  margin: 8px 0 6px;
+  margin: 8px 10px 6px;
   letter-spacing: 0.02em;
 }
 
@@ -218,6 +150,7 @@ body {
   flex: 1;
   min-height: 0;
   margin-top: 4px;
+  padding: 0 10px;
 }
 
 .log-header {
@@ -312,6 +245,7 @@ body {
   gap: 6px;
   margin-top: 8px;
   flex-shrink: 0;
+  padding: 0 10px;
 }
 
 /* ── Buttons ────────────────────────────────────────── */
@@ -382,6 +316,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  align-self: stretch;
 }
 
 .cheat-panel__header {
