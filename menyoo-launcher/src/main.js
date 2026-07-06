@@ -1,5 +1,6 @@
 const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
+import { open } from '@tauri-apps/plugin-dialog';
 
 const STAGE_LABELS = {
   NOT_LOADED: "Not loaded",
@@ -72,6 +73,9 @@ function cacheDom() {
   els.diagMode = q("[data-diag-mode]");
   els.hintText = q("[data-hint-text]");
   els.cheatsSummary = q("[data-cheats-summary]");
+  els.gameSource = q("[data-game-source]");
+  els.gamePath = q("[data-game-path]");
+  els.setManualPath = q('[data-action="set-manual-path"]');
   els.activateAll = q('[data-action="activate-all"]');
   els.deactivateAll = q('[data-action="deactivate-all"]');
   els.openRelease = q('[data-action="open-release"]');
@@ -116,15 +120,30 @@ function renderStatus(status, options = {}) {
   els.diagMode.textContent = status.diagnostic_mode ? "On" : "Off";
   els.diagMode.dataset.state = status.diagnostic_mode ? "cyan" : "off";
 
+  let platformName = "Unknown";
+  if (status.game_platform === "Steam") platformName = "Steam";
+  else if (status.game_platform === "UbisoftConnect") platformName = "Ubisoft Connect";
+  else if (status.game_platform === "EpicGames") platformName = "Epic Games";
+  else if (status.game_platform === "Manual") platformName = "Manual";
+
+  els.gameSource.textContent = platformName;
+  els.gamePath.textContent = status.game_path ?? "None";
+
+  if (!status.game_path) {
+    els.gameSource.textContent = "Not found";
+    els.hintText.textContent = "Could not detect Watch Dogs install. Please select your install folder manually.";
+    els.hintText.style.color = "var(--orange)";
+  }
+
   const visibleLastError = isVisibleErrorMessage(status.last_error);
   if (visibleLastError) {
     els.hintText.textContent = status.last_error;
     els.hintText.style.color = "var(--red)";
     if (!options.suppressVisibleLog) addVisibleError(status.last_error);
-  } else if (!gameOn) {
-    els.hintText.textContent = "Launch Watch Dogs from Steam, load into Story Mode, then open this trainer.";
+  } else if (!gameOn && status.game_path) {
+    els.hintText.textContent = "Launch Watch Dogs, load into Story Mode, then open this trainer.";
     els.hintText.style.color = "var(--orange)";
-  } else {
+  } else if (gameOn) {
     els.hintText.textContent = "";
   }
 
@@ -332,6 +351,23 @@ async function openReleaseFolder() {
   }
 }
 
+async function setManualGamePath() {
+  try {
+    const selected = await open({
+      directory: true,
+      multiple: false,
+      title: 'Select Watch Dogs Install Folder'
+    });
+    if (selected === null) return; // User cancelled
+    
+    const status = await invoke("set_manual_game_path", { path: selected });
+    renderStatus(status);
+  } catch (err) {
+    console.error("Failed to set manual path", err);
+    addVisibleError("Failed to set manual path: " + prettyError(err));
+  }
+}
+
 function exitApp() {
   invoke("exit_app").catch((err) => console.error("Failed to exit app", err));
 }
@@ -422,6 +458,7 @@ function attachEvents() {
   els.openRelease.addEventListener("click", openReleaseFolder);
   els.exitApp.addEventListener("click", exitApp);
   els.refreshLogs.addEventListener("click", loadLogs);
+  els.setManualPath.addEventListener("click", setManualGamePath);
 
   document.addEventListener("keydown", handleCapturedKey, true);
 }

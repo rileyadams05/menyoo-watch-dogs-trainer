@@ -1,0 +1,144 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build ${{ matrix.label }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── Windows ─────────────────────────────────────────────────────────
+          - label: Windows x64
+            runner: windows-latest
+            rust-target: x86_64-pc-windows-msvc
+            artifact-name: MENYOO-windows-x64
+            release-file: MENYOO-windows-x64.exe
+            platform: windows
+
+          # ── Linux ───────────────────────────────────────────────────────────
+          - label: Linux x64
+            runner: ubuntu-latest
+            rust-target: x86_64-unknown-linux-gnu
+            artifact-name: MENYOO-linux-x64
+            release-file: MENYOO-linux-x64
+            platform: linux
+
+    defaults:
+      run:
+        working-directory: menyoo-launcher
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Linux native deps ───────────────────────────────────────────────────
+      - name: Install Linux system deps
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libdbus-1-dev \
+            pkg-config \
+            patchelf
+
+      # ── Shared toolchain ────────────────────────────────────────────────────
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: menyoo-launcher/package-lock.json
+
+      - name: Setup Rust with target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust-target }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: menyoo-launcher/src-tauri
+          key: ${{ matrix.rust-target }}
+
+      - name: Install frontend deps
+        run: npm ci
+
+      # ── Build ───────────────────────────────────────────────────────────────
+      - name: Build Tauri
+        run: npm run tauri build -- --target ${{ matrix.rust-target }}
+
+      # ── Stage artifacts ─────────────────────────────────────────────────────
+      - name: Stage artifact (Windows)
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\artifacts"
+          Copy-Item "src-tauri\target\${{ matrix.rust-target }}\release\menyoo-launcher.exe" `
+            "$env:GITHUB_WORKSPACE\artifacts\${{ matrix.release-file }}" -Force
+
+      - name: Stage artifact (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/artifacts
+          cp src-tauri/target/${{ matrix.rust-target }}/release/menyoo-launcher \
+             $GITHUB_WORKSPACE/artifacts/${{ matrix.release-file }}
+          chmod +x $GITHUB_WORKSPACE/artifacts/${{ matrix.release-file }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: artifacts/${{ matrix.release-file }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -lh artifacts/
+
+      - name: Get short SHA
+        id: sha
+        run: echo "short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ steps.sha.outputs.short }}
+          name: "Build ${{ steps.sha.outputs.short }}"
+          body: |
+            Automated build from commit ${{ github.sha }}
+
+            ## Downloads
+            | File | Platform | Architecture |
+            |------|----------|--------------|
+            | MENYOO-windows-x64.exe | Windows | x64 (64-bit, most PCs) |
+            | MENYOO-linux-x64 | Linux | x64 (64-bit, most PCs) |
+
+            **Not sure which to pick?**
+            - Most Windows users → `MENYOO-windows-x64.exe`
+            - Most Linux users → `MENYOO-linux-x64`
+
+            > **Linux note:** The app UI, config, and launcher run fully on Linux.
+            > DLL injection into watch_dogs.exe is Windows-only and will show a clear
+            > unsupported-platform message on Linux.
+          files: artifacts/*
